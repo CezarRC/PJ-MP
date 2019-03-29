@@ -6,24 +6,79 @@ using UnityEngine.UI;
 public class lobbyManager : MonoBehaviour
 {
     public GameObject host_panel, client_panel;
-    public string host_name, client_name;
+
     public photonHandler pHandler;
+
+    public PhotonView photonView;
+
+    public PlayerLobbyPanel host, client;
+
+    private void Awake()
+    {
+        photonView = PhotonView.Get(this);
+    }
 
     public void OnHostReady()
     {
+        photonView.RPC("RPCSetHostReady", PhotonTargets.All);
+    }
+    
+    public void OnClientReady()
+    {
+        photonView.RPC("RPCSetClientReady", PhotonTargets.All);
+    }
+
+    [PunRPC]
+    public void RPCSetHostReady()
+    {
         host_panel.GetComponent<Image>().color = Color.green;
     }
-    public void OnClientReady()
+
+    [PunRPC]
+    public void RPCSetClientReady()
     {
         client_panel.GetComponent<Image>().color = Color.green;
     }
 
-    public void OnJoinRoom(string player_name)
+    [PunRPC]
+    public void RPCStartGame()
+    {
+        pHandler.StartGame();
+    }
+
+    [PunRPC]
+    public void RPCRequestHostClass()
+    {
+        Debug.Log("Requisitei a host_class");
+        photonView.RPC("RPCSetHostClassInClient", PhotonTargets.Others, host.GetClass());
+    }
+
+    [PunRPC]
+    public void RPCSetHostClassInClient(string host_class)
+    {
+        Debug.Log("Setei a classe do cliente para: " + host_class);
+        host.SetClass(host_class);
+    }
+
+    [PunRPC]
+    public void RPCRequestClientClass()
+    {
+        photonView.RPC("RPCSetClientClassInHost", PhotonTargets.Others, client.GetClass());
+    }
+
+    [PunRPC]
+    public void RPCSetClientClassInHost(string client_class)
+    {
+        client.SetClass(client_class);
+    }
+
+    public void OnJoinRoom(string player_name, string selected_char)
     {
         if (PhotonNetwork.isMasterClient)
         {
-            host_name = player_name;
-            host_panel.transform.Find("player_name").GetComponent<Text>().text = host_name;
+            host.SetHostName(player_name);
+            host.SetClass(selected_char);
+            host_panel.transform.Find("player_name").GetComponent<Text>().text = host.GetHostName();
             host_panel.SetActive(true);
         }
         else
@@ -32,13 +87,15 @@ public class lobbyManager : MonoBehaviour
             {
                 if (player.IsMasterClient)
                 {
-                    host_name = player.NickName;
+                    host.SetHostName(player.NickName);
+                    photonView.RPC("RPCRequestHostClass", PhotonTargets.MasterClient);
                 }
             }
-            host_panel.transform.Find("player_name").GetComponent<Text>().text = host_name;
+            host_panel.transform.Find("player_name").GetComponent<Text>().text = host.GetHostName();
             host_panel.SetActive(true);
-            client_name = player_name;
-            client_panel.transform.Find("player_name").GetComponent<Text>().text = client_name;
+            client.SetClientName(player_name);
+            client.SetClass(selected_char);
+            client_panel.transform.Find("player_name").GetComponent<Text>().text = client.GetClientName();
             client_panel.SetActive(true);
         }
     }
@@ -47,8 +104,9 @@ public class lobbyManager : MonoBehaviour
     {
         if (!player.IsMasterClient)
         {
-            client_name = player.NickName;
-            client_panel.transform.Find("player_name").GetComponent<Text>().text = client_name;
+            client.SetClientName(player.NickName);
+            photonView.RPC("RPCRequestClientClass", PhotonTargets.Others);
+            client_panel.transform.Find("player_name").GetComponent<Text>().text = client.GetClientName();
             client_panel.SetActive(true);
         }
     }
@@ -57,8 +115,9 @@ public class lobbyManager : MonoBehaviour
     {
         if (!PhotonNetwork.isMasterClient) //Aqui eu já sou o Master Client ou não? Debugar para descobrir!
         {
-            host_name = client_name;
-            host_panel.transform.Find("player_name").GetComponent<Text>().text = host_name;
+            host.SetHostName(client.GetClientName());
+            host.SetClass(client.GetClass());
+            host_panel.transform.Find("player_name").GetComponent<Text>().text = host.GetHostName();
             client_panel.SetActive(false);
             host_panel.GetComponent<Image>().color = Color.red;
         }
@@ -68,6 +127,7 @@ public class lobbyManager : MonoBehaviour
         if (PhotonNetwork.isMasterClient)
         {
             client_panel.SetActive(false);
+            client_panel.GetComponent<Image>().color = Color.red;
         }
     }
 
@@ -86,6 +146,14 @@ public class lobbyManager : MonoBehaviour
         else
         {
             return false;
+        }
+    }
+
+    public void OnClickStartGame()
+    {
+        if (PhotonNetwork.isMasterClient && CanStartGame())
+        {
+            photonView.RPC("RPCStartGame", PhotonTargets.All);
         }
     }
 

@@ -38,4 +38,11 @@ MonoBehaviour:
   - RequestForPickupItems
   - RequestForPickupTimes
   - OnMasterClientLeavingRoom
+  - RPCRequestHostClass
+  - RPCSetHostClassInClient
+  - RPCStartGame
+  - RPCRequestClientClass
+  - RPCSetClientClassInHost
+  - RPCSetClientReady
+  - RPCSetHostReady
   DisableAutoOpenWizard: 1

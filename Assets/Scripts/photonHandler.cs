@@ -15,6 +15,8 @@ public class photonHandler : MonoBehaviour
 
     public GameObject myReadyStatus;
 
+    public photonConnect pConnect;
+
     public lobbyManager lManager;
 
     private void Awake()
@@ -97,7 +99,7 @@ public class photonHandler : MonoBehaviour
 
         lManager.gameObject.SetActive(true);
 
-        lManager.OnJoinRoom(pButton.playerName.text);
+        lManager.OnJoinRoom(pButton.playerName.text, selection.getSelectedChar());
     }
 
     public void MoveScene(string sceneName)

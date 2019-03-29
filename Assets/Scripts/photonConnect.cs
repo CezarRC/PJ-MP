@@ -15,12 +15,18 @@ public class photonConnect : MonoBehaviour
 
     private bool rejoin, quit;
 
-    public void connectToGameServers()
+    public void ConnectToGameServers()
     {
         PhotonNetwork.ConnectUsingSettings(versionName);
 
         Debug.Log("Connectiong to photon Game Servers...");
         connectingPanel.SetActive(true);
+    }
+
+    public void BackToMainMenu()
+    {
+        connectionPanel.SetActive(false);
+        DisconnectFromMasterServer();
     }
 
     private void OnConnectedToMaster()
