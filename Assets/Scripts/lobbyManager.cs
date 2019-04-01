@@ -20,13 +20,32 @@ public class lobbyManager : MonoBehaviour
 
     public void OnHostReady()
     {
-        photonView.RPC("RPCSetHostReady", PhotonTargets.All);
+        if (!IsHostReady())
+            photonView.RPC("RPCSetHostReady", PhotonTargets.All);
+        else
+            photonView.RPC("RPCSetHostUnready", PhotonTargets.All);
     }
     
     public void OnClientReady()
     {
-        photonView.RPC("RPCSetClientReady", PhotonTargets.All);
+        if (!IsClientReady())
+            photonView.RPC("RPCSetClientReady", PhotonTargets.All);
+        else
+            photonView.RPC("RPCSetClientUnready", PhotonTargets.All);
     }
+
+    [PunRPC]
+    public void RPCSetHostUnready()
+    {
+        host_panel.GetComponent<Image>().color = Color.red;
+    }
+
+    [PunRPC]
+    public void RPCSetClientUnready()
+    {
+        client_panel.GetComponent<Image>().color = Color.red;
+    }
+
 
     [PunRPC]
     public void RPCSetHostReady()
@@ -80,6 +99,7 @@ public class lobbyManager : MonoBehaviour
             host.SetClass(selected_char);
             host_panel.transform.Find("player_name").GetComponent<Text>().text = host.GetHostName();
             host_panel.SetActive(true);
+            client_panel.transform.Find("client_ready").GetComponent<Button>().interactable = false;
         }
         else
         {
@@ -89,10 +109,15 @@ public class lobbyManager : MonoBehaviour
                 {
                     host.SetHostName(player.NickName);
                     photonView.RPC("RPCRequestHostClass", PhotonTargets.MasterClient);
+                    if(host.GetClass() == selected_char)
+                    {
+                        pHandler.GetOutOfTheRoom();
+                    }
                 }
             }
             host_panel.transform.Find("player_name").GetComponent<Text>().text = host.GetHostName();
             host_panel.SetActive(true);
+            host_panel.transform.Find("host_ready").GetComponent<Button>().interactable = false;
             client.SetClientName(player_name);
             client.SetClass(selected_char);
             client_panel.transform.Find("player_name").GetComponent<Text>().text = client.GetClientName();
@@ -119,6 +144,8 @@ public class lobbyManager : MonoBehaviour
             host.SetClass(client.GetClass());
             host_panel.transform.Find("player_name").GetComponent<Text>().text = host.GetHostName();
             client_panel.SetActive(false);
+            host_panel.transform.Find("host_ready").GetComponent<Button>().interactable = true;
+            client_panel.transform.Find("client_ready").GetComponent<Button>().interactable = false;
             host_panel.GetComponent<Image>().color = Color.red;
         }
     }
@@ -136,17 +163,28 @@ public class lobbyManager : MonoBehaviour
         pHandler.GetOutOfTheRoom();
     }
 
+    private bool IsClientReady()
+    {
+        if (client_panel.GetComponent<Image>().color == Color.green)
+            return true;
+        else
+            return false;
+    }
+
+    private bool IsHostReady()
+    {
+        if (host_panel.GetComponent<Image>().color == Color.green)
+            return true;
+        else
+            return false;
+    }
+
     public bool CanStartGame()
     {
-        if((host_panel.GetComponent<Image>().color   == Color.green) && 
-           (client_panel.GetComponent<Image>().color == Color.green))
-        {
+        if(IsHostReady() && IsClientReady())
             return true;
-        }
         else
-        {
             return false;
-        }
     }
 
     public void OnClickStartGame()

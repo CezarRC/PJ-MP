@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1612562780714233409}
   - component: {fileID: 8693242476858542317}
   m_Layer: 0
-  m_Name: PlayerScrapper
+  m_Name: Scrapper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5951667484881560745}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.75, y: -0.45676354, z: -0.053774968}
+  m_LocalPosition: {x: 2.75, y: -0.45676354, z: 1}
   m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_Children:
   - {fileID: 3737644477939379673}
@@ -222,7 +222,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:

@@ -13,6 +13,8 @@ public class photonHandler : MonoBehaviour
 
     public CharSelection selection;
 
+    PhotonView photonView;
+
     public GameObject myReadyStatus;
 
     public photonConnect pConnect;
@@ -21,7 +23,10 @@ public class photonHandler : MonoBehaviour
 
     private void Awake()
     {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneFinishedLoading;
         DontDestroyOnLoad(this.transform);
+        PhotonNetwork.automaticallySyncScene = true;
+        photonView = PhotonView.Get(this);
     }
 
     public void CreateRoom()
@@ -69,15 +74,50 @@ public class photonHandler : MonoBehaviour
     [PunRPC]
     void OnMasterClientLeavingRoom()
     {
-        lManager.OnMasterLeftRoom();
+        if(SceneManager.GetActiveScene().name == "Main Menu")
+        {
+            lManager.OnMasterLeftRoom();
+        }
+    }
+
+    [PunRPC]
+    void OnClientLeavingRoom()
+    {
+        if (SceneManager.GetActiveScene().name == "Main Menu")
+        {
+            lManager.OnClientLeftRoom();
+        }
+    }
+
+    IEnumerator OnPartnerLeftGame()
+    {
+        PhotonNetwork.LoadLevel("PartnerDisconnected");
+        yield return new WaitForSeconds(5);
+        PhotonNetwork.Disconnect();
+    }
+
+    [PunRPC]
+    void OnQuitInGame()
+    {
+        OnPartnerLeftGame();
+    }
+
+    public void OnClickQuitInGame()
+    {
+        photonView.RPC("OnQuitInGame", PhotonTargets.Others);
+        PhotonNetwork.LoadLevel("Main Menu");
+        PhotonNetwork.Disconnect();
     }
 
     public void GetOutOfTheRoom()
     {
         if (PhotonNetwork.isMasterClient)
         {
-            PhotonView photonView = PhotonView.Get(this);
             photonView.RPC("OnMasterClientLeavingRoom", PhotonTargets.Others);
+        }
+        else
+        {
+            photonView.RPC("OnClientLeavingRoom", PhotonTargets.Others);
         }
         PhotonNetwork.LeaveRoom();
         lManager.Deactivate();
@@ -109,12 +149,14 @@ public class photonHandler : MonoBehaviour
 
     private void OnSceneFinishedLoading(Scene scene, LoadSceneMode mode)
     {
+        Debug.Log("OnSceneFinishedLoading");
         if(scene.name == "Main Menu")
         {
 
         }
         if(scene.name == "FirstLevel")
         {
+            Debug.Log("auau");
             spawnPlayer();
         }
     }
@@ -123,10 +165,12 @@ public class photonHandler : MonoBehaviour
     {
         if (selection.getSelectedChar() == "Engineer")
         {
+            Debug.Log("Spawning Engineer");
             PhotonNetwork.Instantiate("Engineer", engSpawnPlace.position, engSpawnPlace.rotation, 0);
         }
         else if (selection.getSelectedChar() == "Scrapper")
         {
+            Debug.Log("Spawning Scrapper");
             PhotonNetwork.Instantiate("Scrapper", scrapperSpawnPlace.position, scrapperSpawnPlace.rotation, 0);
         }
     }

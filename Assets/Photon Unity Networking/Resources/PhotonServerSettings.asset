@@ -45,4 +45,8 @@ MonoBehaviour:
   - RPCSetClientClassInHost
   - RPCSetClientReady
   - RPCSetHostReady
+  - OnQuitInGame
+  - RPCSetClientUnready
+  - RPCSetHostUnready
+  - OnClientLeavingRoom
   DisableAutoOpenWizard: 1
