@@ -38,7 +38,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 261797790988767693}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -117,7 +117,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4403530747316515171}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -182,7 +182,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5560678971718803444}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 3.14, y: -0.28, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6327069574687132595}
@@ -199,12 +199,14 @@ GameObject:
   - component: {fileID: 6327069574687132595}
   - component: {fileID: 1366378491368704484}
   - component: {fileID: 4291290743789100000}
-  - component: {fileID: 7106856779586095043}
   - component: {fileID: 1612562780714233409}
   - component: {fileID: 8693242476858542317}
   - component: {fileID: 643263278595906314}
-  - component: {fileID: 5078327080730093191}
-  - component: {fileID: 4662805142425428568}
+  - component: {fileID: 7757915998709498185}
+  - component: {fileID: 1837443963463717025}
+  - component: {fileID: 1604420148007959575}
+  - component: {fileID: 2750536215997999009}
+  - component: {fileID: 2794095166660264139}
   m_Layer: 0
   m_Name: Scrapper
   m_TagString: Untagged
@@ -304,21 +306,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 7, y: 7}
   m_EdgeRadius: 0
---- !u!114 &7106856779586095043
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5951667484881560745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be1bf8129b8f3c24281d346877144cfe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movement_speed: 5
-  photon_View: {fileID: 1612562780714233409}
-  playerCamera: {fileID: 6620604615041004896}
 --- !u!114 &1612562780714233409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -340,7 +327,7 @@ MonoBehaviour:
   onSerializeRigidBodyOption: 2
   ownershipTransfer: 0
   ObservedComponents:
-  - {fileID: 7106856779586095043}
+  - {fileID: 1604420148007959575}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -380,7 +367,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &5078327080730093191
+--- !u!114 &7757915998709498185
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -389,11 +376,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5951667484881560745}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cb110492d0fc514da3e09b9a3beaf29, type: 3}
+  m_Script: {fileID: 11500000, guid: 95a8562c1cc95044bb2b0482885025d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimObject: {fileID: 7337825198625351813}
---- !u!114 &4662805142425428568
+  pView: {fileID: 1612562780714233409}
+  repairAmount: 3
+  repairAmount_buff: 1
+--- !u!114 &1837443963463717025
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -402,15 +391,56 @@ MonoBehaviour:
   m_GameObject: {fileID: 5951667484881560745}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33dcbf96d3cb77b44bd92bdeb0991f5c, type: 3}
+  m_Script: {fileID: 11500000, guid: 99a742310c696be4483f17a0a2a1e410, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 133444227932877560, guid: c496fb0ec907e634e9a980deaf95c9a2,
     type: 3}
   bullet_start_point: {fileID: 7868902574073288697}
-  BulletSpeed: 1000
   fireRate: 0.9
-  aimObjectSpread: {fileID: 1090977720642602908}
+  aimObjectSpread: {fileID: 7874595957269989418}
+--- !u!114 &1604420148007959575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5951667484881560745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95f92a83956cd7f4bb3f06521dce17e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movement_speed: 5
+  photon_View: {fileID: 1612562780714233409}
+  playerCamera: {fileID: 6620604615041004896}
+--- !u!114 &2750536215997999009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5951667484881560745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 815a3b543e2747e458a81d2ea2c32370, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Health: 1000
+  PlayerHolder: {fileID: 8056852508759546826}
+--- !u!114 &2794095166660264139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5951667484881560745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f76124de6a4d1e4c99ec6ec0d28be62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aimObject: {fileID: 7337825198625351813}
 --- !u!1 &6620604615041004896
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,7 +533,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4977582355383764744}
   - component: {fileID: 7527378244207865450}
-  - component: {fileID: 1090977720642602908}
+  - component: {fileID: 7874595957269989418}
   m_Layer: 0
   m_Name: aimObjectScr
   m_TagString: Untagged
@@ -519,8 +549,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7337825198625351813}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.4, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 8.4, y: -0.00000019868, z: 0}
+  m_LocalScale: {x: 2.925, y: 2.925, z: 2.925}
   m_Children:
   - {fileID: 5045464518791759706}
   - {fileID: 3511044339120213373}
@@ -575,7 +605,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1090977720642602908
+--- !u!114 &7874595957269989418
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -584,13 +614,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 7337825198625351813}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82c29ab15c15906459da7b94fda5281e, type: 3}
+  m_Script: {fileID: 11500000, guid: d700732b08ba6394f93abe68b9644288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  max_spread: 8
-  min_spread: 2
+  max_spread: 2
+  min_spread: 0.5
   minimum_spread_distance: 5
-  maximum_spread_distance: 20
+  maximum_spread_distance: 35
   spreadUp: {fileID: 5045464518791759706}
   spreadDown: {fileID: 3511044339120213373}
   player: {fileID: 1849558834330417597}

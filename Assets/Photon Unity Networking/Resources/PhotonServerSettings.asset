@@ -49,4 +49,6 @@ MonoBehaviour:
   - RPCSetClientUnready
   - RPCSetHostUnready
   - OnClientLeavingRoom
+  - OnPlayerDied
+  - OnPlayerRespawn
   DisableAutoOpenWizard: 1

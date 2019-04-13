@@ -17,6 +17,8 @@ public class photonHandler : MonoBehaviour
 
     public GameObject myReadyStatus;
 
+    public string myPlayerName;
+
     public photonConnect pConnect;
 
     public lobbyManager lManager;
@@ -135,8 +137,6 @@ public class photonHandler : MonoBehaviour
 
     public void OnJoinedRoom()
     {
-        Debug.Log("We are connected to the room!");
-
         lManager.gameObject.SetActive(true);
 
         lManager.OnJoinRoom(pButton.playerName.text, selection.getSelectedChar());
@@ -149,14 +149,12 @@ public class photonHandler : MonoBehaviour
 
     private void OnSceneFinishedLoading(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("OnSceneFinishedLoading");
         if(scene.name == "Main Menu")
         {
 
         }
         if(scene.name == "FirstLevel")
         {
-            Debug.Log("auau");
             spawnPlayer();
         }
     }
@@ -165,14 +163,40 @@ public class photonHandler : MonoBehaviour
     {
         if (selection.getSelectedChar() == "Engineer")
         {
-            Debug.Log("Spawning Engineer");
             PhotonNetwork.Instantiate("Engineer", engSpawnPlace.position, engSpawnPlace.rotation, 0);
         }
         else if (selection.getSelectedChar() == "Scrapper")
         {
-            Debug.Log("Spawning Scrapper");
             PhotonNetwork.Instantiate("Scrapper", scrapperSpawnPlace.position, scrapperSpawnPlace.rotation, 0);
         }
+    }
+
+    public string GetMyPlayerName()
+    {
+        return myPlayerName;
+    }
+    
+    [PunRPC]
+    public void OnPlayerDied(string name)
+    {
+        GameObject.Find(name).SetActive(false);
+    }
+
+    [PunRPC]
+    public void OnPlayerRespawn(string name)
+    {
+        GameObject.Find(name).SetActive(true);
+    }
+
+    public void RespawnPlayer(string name)
+    {
+        photonView.RPC("OnPlayerRespawn", PhotonTargets.All, name);
+    }
+
+    public void MyPlayerDied(string name)
+    {
+        myPlayerName = name;
+        photonView.RPC("OnPlayerDied", PhotonTargets.All, name);
     }
 
     public void OnReadyButton()

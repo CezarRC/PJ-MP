@@ -6,16 +6,27 @@ public class MenuManager : MonoBehaviour
 {
 
     public GameObject gameMenu;
-    public GameObject pHandler;
+    public GameObject deathMenu;
+    public photonHandler pHandler;
 
     void Start()
     {
-        pHandler = GameObject.Find("photonDontDestroy");
+        pHandler = GameObject.Find("photonDontDestroy").GetComponent<photonHandler>();
     }
 
     void Update()
     {
         CheckInputs();
+    }
+
+    public void ActivateDeathMenu(bool flag)
+    {
+        deathMenu.SetActive(flag);
+    }
+
+    public void OnClickRespawn()
+    {
+        pHandler.RespawnPlayer(pHandler.GetMyPlayerName());
     }
 
     void CheckInputs()
@@ -28,6 +39,6 @@ public class MenuManager : MonoBehaviour
     }
     public void QuitInGame()
     {
-        pHandler.GetComponent<photonHandler>().OnClickQuitInGame();
+        pHandler.OnClickQuitInGame();
     }
 }

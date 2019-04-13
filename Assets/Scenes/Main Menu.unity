@@ -5855,6 +5855,11 @@ PrefabInstance:
       propertyPath: lManager
       value: 
       objectReference: {fileID: 712620468}
+    - target: {fileID: 5925023256752891548, guid: a9d90f8564f2e954abb89b1fa12bdbdd,
+        type: 3}
+      propertyPath: pConnect
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5925023256752891549, guid: a9d90f8564f2e954abb89b1fa12bdbdd,
         type: 3}
       propertyPath: m_LocalPosition.x

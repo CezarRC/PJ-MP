@@ -32,14 +32,12 @@ public class PlayerMovement : Photon.MonoBehaviour
         }
         else
         {
-            Debug.Log("Not yours");
             smoothNetMovement();
         }
     }
 
     private void handleInputs()
     {
-        Debug.Log("to andando carai");
         var move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         transform.position += move * movement_speed * Time.deltaTime;
     }
