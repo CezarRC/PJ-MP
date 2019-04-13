@@ -32,7 +32,6 @@ public class photonConnect : MonoBehaviour
     private void OnConnectedToMaster()
     {
         PhotonNetwork.JoinLobby(TypedLobby.Default);
-        Debug.Log("We are connected to master server");
         connectingPanel.SetActive(false);
         connectionPanel.SetActive(true);
     }
@@ -67,8 +66,6 @@ public class photonConnect : MonoBehaviour
 
     private void OnDisconnectedFromPhoton()
     {
-        Debug.Log("Disconnected from the Game Server...");
-
         if (rejoin && !PhotonNetwork.ReconnectAndRejoin())
         {
             SceneManager.LoadScene("LostConnection", LoadSceneMode.Single);
