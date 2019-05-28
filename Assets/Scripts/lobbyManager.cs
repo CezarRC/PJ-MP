@@ -11,6 +11,10 @@ public class lobbyManager : MonoBehaviour
 
     public PhotonView photonView;
 
+    public GameObject connectionPanel;
+
+    public GameObject roomName;
+
     public PlayerLobbyPanel host, client;
 
     private void Awake()
@@ -69,14 +73,23 @@ public class lobbyManager : MonoBehaviour
     public void RPCRequestHostClass()
     {
         Debug.Log("Requisitei a host_class");
-        photonView.RPC("RPCSetHostClassInClient", PhotonTargets.Others, host.GetClass());
+        bool ready;
+        if (host_panel.GetComponent<Image>().color == Color.red)
+            ready = false;
+        else
+            ready = true;
+        photonView.RPC("RPCSetHostClassInClient", PhotonTargets.Others, host.GetClass(), ready);
     }
 
     [PunRPC]
-    public void RPCSetHostClassInClient(string host_class)
+    public void RPCSetHostClassInClient(string host_class, bool ready_status)
     {
         Debug.Log("Setei a classe do cliente para: " + host_class);
         host.SetClass(host_class);
+        if (ready_status != false)
+            host_panel.GetComponent<Image>().color = Color.red;
+        else
+            host_panel.GetComponent<Image>().color = Color.green;
     }
 
     [PunRPC]
@@ -93,11 +106,13 @@ public class lobbyManager : MonoBehaviour
 
     public void OnJoinRoom(string player_name, string selected_char)
     {
+        roomName.GetComponent<Text>().text = "Room: " + PhotonNetwork.room.Name;
         if (PhotonNetwork.isMasterClient)
         {
             host.SetHostName(player_name);
             host.SetClass(selected_char);
             host_panel.transform.Find("player_name").GetComponent<Text>().text = host.GetHostName();
+            Debug.Log("Ativei Painel de host...");
             host_panel.SetActive(true);
             client_panel.transform.Find("client_ready").GetComponent<Button>().interactable = false;
         }
@@ -111,6 +126,8 @@ public class lobbyManager : MonoBehaviour
                     photonView.RPC("RPCRequestHostClass", PhotonTargets.MasterClient);
                     if(host.GetClass() == selected_char)
                     {
+                        Debug.Log("Host class: " + host.GetClass());
+                        Debug.Log("selected_char: " + selected_char);
                         pHandler.GetOutOfTheRoom();
                     }
                 }
@@ -138,11 +155,14 @@ public class lobbyManager : MonoBehaviour
 
     public void OnMasterLeftRoom()
     {
-        if (!PhotonNetwork.isMasterClient) //Aqui eu já sou o Master Client ou não? Debugar para descobrir!
+        Debug.Log("Master saiu, eu sou o master client já?" + PhotonNetwork.isMasterClient);
+        if (!PhotonNetwork.isMasterClient) //Aqui eu não sou mais o master client ainda.
         {
             host.SetHostName(client.GetClientName());
             host.SetClass(client.GetClass());
             host_panel.transform.Find("player_name").GetComponent<Text>().text = host.GetHostName();
+            client.SetClass("");
+            client.SetClientName("");
             client_panel.SetActive(false);
             host_panel.transform.Find("host_ready").GetComponent<Button>().interactable = true;
             client_panel.transform.Find("client_ready").GetComponent<Button>().interactable = false;
@@ -160,6 +180,7 @@ public class lobbyManager : MonoBehaviour
 
     public void OnClickLeftRoom()
     {
+        ResetLobby();
         pHandler.GetOutOfTheRoom();
     }
 
@@ -199,6 +220,21 @@ public class lobbyManager : MonoBehaviour
     {
         host_panel.SetActive(false);
         client_panel.SetActive(false);
+        connectionPanel.SetActive(true);
         gameObject.SetActive(false);
+    }
+
+    private void ResetLobby()
+    {
+        host.SetClass("");
+        host.SetClientName("");
+        host.SetHostName("");
+        client.SetClass("");
+        client.SetClientName("");
+        client.SetHostName("");
+        host_panel.GetComponent<Image>().color = Color.red;
+        client_panel.GetComponent<Image>().color = Color.red;
+        client_panel.transform.Find("client_ready").GetComponent<Button>().interactable = true;
+        host_panel.transform.Find("host_ready").GetComponent<Button>().interactable = true;
     }
 }

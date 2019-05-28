@@ -7,6 +7,8 @@ public class photonConnect : MonoBehaviour
 {
     public string versionName = "0.1";
 
+    public GameObject menuPanel; 
+
     public GameObject connectingPanel;
 
     public GameObject connectionPanel;
@@ -17,6 +19,7 @@ public class photonConnect : MonoBehaviour
 
     public void ConnectToGameServers()
     {
+        menuPanel.SetActive(false);
         PhotonNetwork.ConnectUsingSettings(versionName);
 
         Debug.Log("Connectiong to photon Game Servers...");
@@ -26,6 +29,7 @@ public class photonConnect : MonoBehaviour
     public void BackToMainMenu()
     {
         connectionPanel.SetActive(false);
+        menuPanel.SetActive(true);
         DisconnectFromMasterServer();
     }
 

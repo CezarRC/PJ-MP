@@ -51,4 +51,13 @@ MonoBehaviour:
   - OnClientLeavingRoom
   - OnPlayerDied
   - OnPlayerRespawn
+  - KillEnemy
+  - SetScraps
+  - DestroyGameObject
+  - DisableBuilding
+  - EnableBuilding
+  - Shoot
+  - Repair
+  - ShootAtTarget
+  - CallEndGame
   DisableAutoOpenWizard: 1

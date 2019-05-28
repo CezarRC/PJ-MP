@@ -24,16 +24,16 @@ public class CharSelection : MonoBehaviour
 
     void engineerSelected()
     {
-        engineer_selection_button.transform.GetChild(1).gameObject.SetActive(true);
-        scrapper_selection_button.transform.GetChild(1).gameObject.SetActive(false);
+        engineer_selection_button.transform.GetChild(0).gameObject.SetActive(true);
+        scrapper_selection_button.transform.GetChild(0).gameObject.SetActive(false);
 
         selected_char = "Engineer";
     }
 
     void scrapperSelected()
     {
-        scrapper_selection_button.transform.GetChild(1).gameObject.SetActive(true);
-        engineer_selection_button.transform.GetChild(1).gameObject.SetActive(false);
+        scrapper_selection_button.transform.GetChild(0).gameObject.SetActive(true);
+        engineer_selection_button.transform.GetChild(0).gameObject.SetActive(false);
 
         selected_char = "Scrapper";
     }
