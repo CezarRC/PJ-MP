@@ -10,11 +10,14 @@ public class PlayerLife : MonoBehaviour
     public GameObject PlayerHolder;
     private photonHandler pHandler;
     private MenuManager lManager;
+    private EconomyManager eManager;
+
     
     void Start()
     {
         pHandler = GameObject.Find("photonDontDestroy").GetComponent<photonHandler>();
         lManager = GameObject.Find("LevelManager").GetComponent<MenuManager>();
+        eManager = GameObject.Find("LevelManager").GetComponent<EconomyManager>();
     }
     
 
@@ -29,8 +32,26 @@ public class PlayerLife : MonoBehaviour
 
         if(Health <= 0)
         {
-            KillThisPlayer();
-            ActivateRespawnMenu(true);
+            TempRespawnPlayer();
+            eManager.RemoveHalfScraps();
+
+            //We will need to verify many things on this implementation later, for now, we will only make the player
+            //get back to its initial position and lose half of his current scraps.
+            //---------KillThisPlayer();
+            //---------ActivateRespawnMenu(true);
+        }
+    }
+
+    private void TempRespawnPlayer()
+    {
+        Health = 1000;
+        if(gameObject.name == "Engineer (Clone)")
+        {
+            transform.position = pHandler.engSpawnPlace.position;
+        }
+        else if (gameObject.name == "Scrapper (Clone)")
+        {
+            transform.position = pHandler.scrapperSpawnPlace.position;
         }
     }
     

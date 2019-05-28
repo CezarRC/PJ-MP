@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,20 +14,28 @@ public class photonHandler : MonoBehaviour
 
     PhotonView photonView;
 
+    public GameObject connectionPanel;
+
     public GameObject myReadyStatus;
 
-    public string myPlayerName;
+    public string MasterPlayerName;
 
     public photonConnect pConnect;
 
     public lobbyManager lManager;
 
+    public EconomyManager eManager;
+
+    public string ClientPlayerName;
+
     private void Awake()
     {
-        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneFinishedLoading;
+        SceneManager.sceneLoaded += OnSceneFinishedLoading;
         DontDestroyOnLoad(this.transform);
         PhotonNetwork.automaticallySyncScene = true;
         photonView = PhotonView.Get(this);
+        PhotonNetwork.sendRate = 10;
+        PhotonNetwork.sendRateOnSerialize = 10;
     }
 
     public void CreateRoom()
@@ -138,6 +145,7 @@ public class photonHandler : MonoBehaviour
     public void OnJoinedRoom()
     {
         lManager.gameObject.SetActive(true);
+        connectionPanel.SetActive(false);
 
         lManager.OnJoinRoom(pButton.playerName.text, selection.getSelectedChar());
     }
@@ -173,19 +181,21 @@ public class photonHandler : MonoBehaviour
 
     public string GetMyPlayerName()
     {
-        return myPlayerName;
+        return MasterPlayerName;
     }
     
     [PunRPC]
     public void OnPlayerDied(string name)
     {
-        GameObject.Find(name).SetActive(false);
+        GameObject tempGO = GameObject.Find(name);
+        tempGO.SetActive(false);
     }
 
     [PunRPC]
     public void OnPlayerRespawn(string name)
     {
-        GameObject.Find(name).SetActive(true);
+        GameObject tempGO = GameObject.Find(name);
+        tempGO.SetActive(true);
     }
 
     public void RespawnPlayer(string name)
@@ -195,7 +205,16 @@ public class photonHandler : MonoBehaviour
 
     public void MyPlayerDied(string name)
     {
-        myPlayerName = name;
+        if (PhotonNetwork.isMasterClient)
+        {
+            MasterPlayerName = name;
+            Debug.Log("Master player name changed to: " + name);
+        }
+        else
+        {
+            ClientPlayerName = name;
+            Debug.Log("Client player name changed to: " + name);
+        }
         photonView.RPC("OnPlayerDied", PhotonTargets.All, name);
     }
 
@@ -211,9 +230,53 @@ public class photonHandler : MonoBehaviour
         }
     }
 
+    [PunRPC]
+    public void SetScraps(int s)
+    {
+        if (eManager == null)
+        {
+            eManager = GameObject.Find("LevelManager").GetComponent<EconomyManager>();
+        }
+        eManager.SetScraps(s);
+    }
+
+    public void SetScrapsForAll(int s)
+    {
+        photonView.RPC("SetScraps", PhotonTargets.All, s);
+    }
+    
     public void StartGame()
     {
         MoveScene("FirstLevel");
+    }
+
+    public void EndGame(bool win)
+    {
+        photonView.RPC("CallEndGame", PhotonTargets.All, win);
+    }
+
+    [PunRPC]
+    public void CallEndGame(bool win)
+    {
+        if (!win)
+        {
+            MoveScene("LoseScene");
+        }
+        else
+        {
+            MoveScene("WinScene");
+        }
+    }
+
+    public void CallDestroy(GameObject go)
+    {
+        photonView.RPC("DestroyGameObject", PhotonTargets.All, go);
+    }
+
+    [PunRPC]
+    public void DestroyGameObject(GameObject go)
+    {
+        Destroy(go);
     }
 
 }

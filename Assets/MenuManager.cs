@@ -8,6 +8,7 @@ public class MenuManager : MonoBehaviour
     public GameObject gameMenu;
     public GameObject deathMenu;
     public photonHandler pHandler;
+    public GameObject tempCamera;
 
     void Start()
     {
@@ -21,6 +22,7 @@ public class MenuManager : MonoBehaviour
 
     public void ActivateDeathMenu(bool flag)
     {
+        tempCamera.SetActive(flag);
         deathMenu.SetActive(flag);
     }
 

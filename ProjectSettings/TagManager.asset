@@ -4,8 +4,16 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - wall
+  - Wall
+  - Bullet
+  - Enemy
   - bullet
+  - wall
+  - Buildable
+  - Turret
+  - Barrier
+  - Nexus
+  - Tumor
   layers:
   - Default
   - TransparentFX
@@ -15,17 +23,17 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Enemy
+  - Wall
+  - Bullet
+  - PlayerWall
+  - Tumor
+  - Buildable
+  - Turret
+  - Barrier
+  - Nexus
+  - InactiveBarrier
   - 
   - 
   - 

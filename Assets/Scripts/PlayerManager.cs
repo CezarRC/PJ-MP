@@ -5,13 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour
 {
-    enum PlayerClass
-    {
-        Engineer,
-        Scrapper
-    }
-
-    int player_class;
+    public int player_class;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,10 +18,20 @@ public class PlayerManager : MonoBehaviour
         
     }
 
-    public void SetPlayerClass(int player_class, Sprite player_sprite)
+    public int GetPlayerClass()
     {
-        //This will need to be refactored in the future, we should add a SpriteBuffer Class to handle the sprites while in the game
-        transform.Find("Sprite").GetComponent<Image>().sprite = player_sprite;
-        this.player_class = player_class;
+        return player_class;
+    }
+
+    public void SetPlayerClass(string pClass)
+    {
+        if(pClass == "Engineer")
+        {
+            player_class = 0;
+        }
+        else
+        {
+            player_class = 1;
+        }
     }
 }
